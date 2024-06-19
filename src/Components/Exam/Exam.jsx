@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
+import { useParams } from 'react-router-dom';
 import "./exam.css";
+import apis from '../../apis/apis';
 
 export default function Exam() {
-  const [formData, setFormData] = useState(() => {
-    // Load formData from localStorage or use default values
-    const savedData = localStorage.getItem('formData');
-    return savedData ? JSON.parse(savedData) : {
+  const [formData, setFormData] = useState({
+    
       name: '',
       email: '',
-      answers: []
-    };
+      title: '',
+      questions: [],
+    
   });
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
 
   useEffect(() => {
-    // Save formData to localStorage whenever it changes
-    localStorage.setItem('formData', JSON.stringify(formData));
+    
+    apis.getExamById(id).then((res) => {
+      setFormData({
+        ...formData,
+        title: res.data.title,
+        questions: res.data.questions.map((question) => ({ id: question.id, question: question.question, answer: '' }))
+      });
+      setLoading(false);
+    }
+    ).catch(() => {
+      setLoading(false);
+    });
+    console.log(formData);
 
-    // Cleanup function to delete formData from localStorage when component unmounts
-    return () => {
-      localStorage.removeItem('formData');
-    };
-  }, [formData]);
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -31,25 +41,28 @@ export default function Exam() {
   };
 
   const handleAnswerChange = (index, event) => {
-    const updatedAnswers = [...formData.answers];
-    updatedAnswers[index] = { id: index, answer: event.target.value };
+    console.log(formData);
+    const { value } = event.target;
+    const newQuestions = [...formData.questions];
+    newQuestions[index].answer = value;
     setFormData({
       ...formData,
-      answers: updatedAnswers
+      questions: newQuestions
     });
   };
 
-  const addAnswer = () => {
-    setFormData({
-      ...formData,
-      answers: [...formData.answers, { id: formData.answers.length, answer: '' }]
-    });
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
-    // Send formData to your backend or perform further processing here
+    apis.submitExam({exam_id: id, student_name: formData.name, student_email: formData.email, questions: formData.questions}).then((res) => {
+      console.log(res);
+      
+    }
+    ).catch((err) => {
+      console.log(err);
+    }
+    );
+
   };
 
   return (
@@ -57,7 +70,7 @@ export default function Exam() {
       <div className="container  accordion-body d-flex justify-content-center flex-column flex py-5">
       <div className="text-center pb-5">
 
-<h2 >Title of exam</h2>
+<h2 >{formData.title}</h2>
       </div>
         <form onSubmit={handleSubmit} className='d-flex flex-column align-items-center'>
           <div className="information d-flex flex-column w-100">
@@ -86,14 +99,14 @@ export default function Exam() {
               />
             </label>
           </div>
-          {formData.answers.map((answer, index) => (
-            <div className="exam-question my-3" key={index}>
-              <h4>Qَuestion {index + 1}</h4>
+          {formData.questions.map((question,index) => (
+            <div className="exam-question my-3" key={question.id}>
+              <h4>{question.question}</h4>
               <input
                 className='form-control my-3'
                 type="text"
                 placeholder="Enter your answer"
-                value={answer.answer}
+                value={question.answer}
                 onChange={(event) => handleAnswerChange(index, event)}
               />
             </div>

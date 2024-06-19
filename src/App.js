@@ -8,16 +8,20 @@ import Exam from './Components/Exam/Exam';
 import SignIn from './Components/SignIn/SignIn';
 import SignInSide from './Components/SignIn/SignIn';
 import { Route, Routes } from 'react-router';
+import PrivateRoutes from './Components/PrivateRoutes/PrivateRoutes';
 // import { Route, Routes } from "react-router";
 function App() {
   return (
     <div className="App">
       <Routes>
       <Route path="/" element={<SignInSide/>} />
-      <Route path="/home" element={<MainPage/>} />
-      <Route path="/create" element={<CreateForm/>} />
-      <Route path="/exam" element={<Exam/>} />
-      <Route path="/history" element={<Table/>} />
+      <Route path="/exam/:id" element={<Exam/>} />
+      <Route element={<PrivateRoutes />}>
+        <Route path="/home" element={<MainPage/>} />
+        <Route path="/create" element={<CreateForm/>} />
+        
+        <Route path="/history" element={<Table/>} />
+      </Route>
       </Routes>
 {/* <Login/> */}
 {/* <MainPage/> */}

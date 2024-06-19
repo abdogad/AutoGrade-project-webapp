@@ -10,14 +10,26 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import image from "../../Assets/student-using-tablet-computer-flat-illustration-generative_676904-7232.jpg"
+import apis from "../../apis/apis";
 export default function SignInSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email");
+    const password = data.get("password");
+    apis
+      .login({ email: email, password: password })
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("access_token", res.data.token);
+          window.location.href = "/home";
+        } else {
+          alert("Invalid Credentials");
+        }
+      })
+      .catch((err) => {
+        alert("Invalid Credentials");
+      });
   };
 
   return (

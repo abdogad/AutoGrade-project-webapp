@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import "./form.css";
 import Question from './Question';
+import apis from '../../apis/apis';
+
 
 // Question component
 
@@ -32,7 +34,15 @@ export default function CreateForm() {
   // Function to submit the form
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(questions);
+    const title = "Title of exam";
+    apis.createExam({title:title, questions:questions, start_time: new Date(), end_time: new Date()}).then((res) => {
+      console.log(res);
+    }
+    ).catch((err) => {
+      console.log(err);
+    }
+    );
+    
     // Here you can send the questions array to your backend or wherever you need
   };
 
