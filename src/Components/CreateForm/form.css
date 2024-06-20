@@ -1,5 +1,66 @@
-.brdr{
-    height: 2px;
-    width: 100%;
-    background-color: black;
+.exam-title-container {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Add some space below the title */
+  }
+  
+  .exam-title {
+    /* remove the borders and background of the text box */
+    background: none;
+    /* Add some styling to the text */
+    font-size: 20px;
+    color: #333;
+    /* remove highlight */
+    outline: none;
+    border: none !important;
+    justify-content: center;
+    text-align: center;
+    
+  }
+  
+  .title-divider {
+    width: 80%; /* Adjust the width as needed */
+    margin: -12px auto; /* Center the line and add some spacing */
+  }
+  
+  .no-questions {
+    text-align: center;
+    color: #666;
+    font-size: 24px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-questions-icon {
+    font-size: 50px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    align-items: center;
+}
+
+
+
+
+
+
+
+/* Media query for responsive design */
+@media (max-width: 576px) {
+    .buttons-container {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }

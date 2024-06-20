@@ -23,9 +23,11 @@ export default function MainPage() {
                 </div>
             </div>
             <div class="box-3 py-3">
-                <div class="btn btn-one bg-primary px-5">
-                <Link to="/history" ><span>Show</span></Link>
-                </div>
+                <Link to="/history" >
+                    <div class="btn btn-one bg-primary px-5">
+                        <span className='text-primary hover:text-success'>Show</span>
+                    </div>
+                </Link>
             </div>
                 
             </div>

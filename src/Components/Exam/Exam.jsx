@@ -1,120 +1,157 @@
-import React, { useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "./exam.css";
-import apis from '../../apis/apis';
+import apis from "../../apis/apis";
 
 export default function Exam() {
   const [formData, setFormData] = useState({
-    
-      name: '',
-      email: '',
-      title: '',
-      questions: [],
-    
+    title: "",
+    questions: [],
   });
+  const [end_time, setEndTime] = useState(new Date());
+  const [remainingTime, setRemainingTime] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("Active");
   const { id } = useParams();
 
   useEffect(() => {
-    
-    apis.getExamById(id).then((res) => {
-      setFormData({
-        ...formData,
-        title: res.data.title,
-        questions: res.data.questions.map((question) => ({ id: question.id, question: question.question, answer: '' }))
+    apis
+      .getExamById(id)
+      .then((res) => {
+        setFormData({
+          ...formData,
+          title: res.data.title,
+          questions: res.data.questions.map((question) => ({
+            id: question.id,
+            question: question.question,
+            answer: "",
+          })),
+        });
+        setEndTime(new Date(res.data.end_time));
+        if (res.data.message){
+            setStatus(res.data.message);
+            
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setStatus("Not found");
+        setLoading(false);
       });
-      setLoading(false);
-    }
-    ).catch(() => {
-      setLoading(false);
-    });
-    console.log(formData);
-
-  }, []);
+  }, [id]); // Added id as a dependency
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleAnswerChange = (index, event) => {
-    console.log(formData);
+    console.log(formData.questions);
     const { value } = event.target;
     const newQuestions = [...formData.questions];
     newQuestions[index].answer = value;
     setFormData({
       ...formData,
-      questions: newQuestions
+      questions: newQuestions,
     });
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    apis.submitExam({exam_id: id, student_name: formData.name, student_email: formData.email, questions: formData.questions}).then((res) => {
-      console.log(res);
-      
-    }
-    ).catch((err) => {
-      console.log(err);
-    }
-    );
-
+    apis
+      .submitExam({
+        exam_id: id,
+        student_name: formData.name,
+        student_email: formData.email,
+        questions: formData.questions,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const seconds_to_ms = (d) => {
+    d = Number(d);
+    var m = Math.floor(d / 60);
+    var s = Math.floor((d % 3600) % 60);
+    return `${m}:${s < 10 ? "0" + s : s}`;
   };
 
-  return (
-    <>
-      <div className="container  accordion-body d-flex justify-content-center flex-column flex py-5">
-      <div className="text-center pb-5">
+  useEffect(() => {
+    if (end_time) {
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = end_time - now;
+        setRemainingTime(distance);
 
-<h2 >{formData.title}</h2>
-      </div>
-        <form onSubmit={handleSubmit} className='d-flex flex-column align-items-center'>
-          <div className="information d-flex flex-column w-100">
-            <label htmlFor="name">
-              Name
-              <input
-                id="name"
-                name="name"
-                className='form-control my-3'
-                type="text"
-                placeholder="Enter your Name"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label htmlFor="email">
-              Email
-              <input
-                id="email"
-                name="email"
-                className='form-control my-3'
-                type="email"
-                placeholder="Enter your Email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </label>
+        if (distance < 0) {
+          clearInterval(interval);
+          setRemainingTime(0);
+          // Handle exam end (e.g., auto-submit)
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [end_time]);
+
+  if (loading) {
+    return <div style={{
+        width:"100%",
+        height:"100vh",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        fontSize:"2rem"
+        
+    }}>Loading...</div>;
+  }
+  if (status !== "Active") {
+    return <div style={{
+        width:"100%",
+        height:"100vh",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        fontSize:"2rem"
+
+    }}>{status}</div>;
+  }
+
+  return (
+    <div className="exam-container">
+      <form onSubmit={handleSubmit}>
+        <div className="header">
+          <h1>{formData.title}</h1>
+          <div className="time-remaining">
+            {remainingTime !== null ? (
+              <span>{seconds_to_ms(remainingTime / 1000)}</span>
+            ) : null}
           </div>
-          {formData.questions.map((question,index) => (
-            <div className="exam-question my-3" key={question.id}>
-              <h4>{question.question}</h4>
-              <input
-                className='form-control my-3'
-                type="text"
-                placeholder="Enter your answer"
-                value={question.answer}
-                onChange={(event) => handleAnswerChange(index, event)}
-              />
+        </div>
+
+        {formData.questions.map((q, index) => (
+          <div className="question" key={q.id}>
+            <div className="question-text">
+              <h4>{`Q${index + 1}: `}</h4>
+              <span>{q.question}</span>
             </div>
-          ))}
-          {/* <button type="button" onClick={addAnswer} className='btn btn-primary mx-3 px-4'>Add Answer</button> */}
-          <button type="submit" className='btn btn-success'>Submit</button>
-        </form>
-      </div>
-    </>
+            <textarea
+              className="answer-box"
+              placeholder="Write your answer here..."
+              value={q.answer}
+              onChange={(e) => handleAnswerChange(index, e)}
+              required
+            />
+          </div>
+        ))}
+        <button type="submit">Submit</button>
+      </form>
+    </div>
   );
 }

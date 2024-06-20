@@ -11,7 +11,9 @@ import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import image from "../../Assets/student-using-tablet-computer-flat-illustration-generative_676904-7232.jpg"
 import apis from "../../apis/apis";
+import { useEffect ,useState} from "react";
 export default function SignInSide() {
+  const [loading, setLoading] = useState(true);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -31,7 +33,28 @@ export default function SignInSide() {
         alert("Invalid Credentials");
       });
   };
-
+  useEffect(() => {
+    apis
+      .isLogged()
+      .then((res) => {
+        if (res.status === 200) {
+          window.location.href = "/home";
+        }
+        setLoading(false);
+      })
+      .catch(() => {setLoading(false);});
+  }, []);
+  if (loading) {
+    return <div style={{
+      width:"100vh",
+      height:"100vh",
+      display:"flex",
+      justifyContent:"center",
+      alignItems:"center",
+      fontSize:"2rem"
+      
+  }}>Loading...</div>;
+  }
   return (
     <Container component="main" maxWidth="lg">
       <Box

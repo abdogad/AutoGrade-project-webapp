@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./form.css";
 import Question from './Question';
 import apis from '../../apis/apis';
+import { FaRegQuestionCircle } from 'react-icons/fa';
 
 
 // Question component
@@ -47,34 +48,44 @@ export default function CreateForm() {
   };
 
   return (
-    <div className="container ">
-      <div className="text-center py-5">
-
-<h2 >Title of exam</h2>
+    <div className="container">
+      <div className="exam-title-container">
+        <input type="text" className='exam-title' placeholder="Enter exam title" />
+        <hr className="title-divider" />
       </div>
-    
-    <form onSubmit={handleSubmit}>
-      <div className="createForm py-5">
-        <div className="container d-flex justify-content-center">
-          <div className="boxInput w-50">
-            {/* Render existing questions */}
-            {questions.length!==0?questions.map((question, index) => (
-              <Question
-                key={index}
-                index={index}
-                questionData={question}
-                handleChange={handleChange}
-                removeQuestion={removeQuestion}
-              />
-            )):<><h1>No questions added yet</h1></>}
-            {/* Button to add new question */}
-            <button type="button" onClick={addQuestion} className='btn btn-primary mx-3 px-4'>Add New Question</button>
-            {/* Button to submit the form */}
-            <button type="submit" className='btn btn-success'>Submit</button>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="createForm py-3">
+          <div className="container d-flex justify-content-center">
+            <div className="boxInput w-50">
+              {questions.length !== 0 ? (
+                questions.map((question, index) => (
+                  <Question
+                    key={index}
+                    index={index}
+                    questionData={question}
+                    handleChange={handleChange}
+                    removeQuestion={removeQuestion}
+                  />
+                ))
+              ) : (
+                <div className="no-questions">
+                  <FaRegQuestionCircle className="no-questions-icon" />
+                  <h1>No questions added yet</h1>
+                </div>
+              )}
+              <div className="buttons-container">
+                <button type="button" onClick={addQuestion} className="btn btn-primary exam-button">
+                  Add New Question
+                </button>
+                <button type="submit" className="btn btn-success exam-button">
+                  Submit
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
     </div>
   );
 }
