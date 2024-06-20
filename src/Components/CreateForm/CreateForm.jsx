@@ -14,7 +14,7 @@ export default function CreateForm() {
 
   // Function to add a new question to the list
   const addQuestion = () => {
-    setQuestions([...questions, { question: '', answer: '' }]);
+    setQuestions([...questions, { question: '', answer: '',graded: true }]);
   };
 
   // Function to handle changes in question or answer inputs
