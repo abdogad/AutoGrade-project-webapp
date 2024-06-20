@@ -10,6 +10,7 @@ export default function Question({ index, questionData, handleChange, removeQues
         value={questionData.question}
         onChange={(e) => handleChange(index, 'question', e.target.value)}
       />
+      {questionData.graded && (
       <input
         className='form-control my-2'
         type="text"
@@ -17,13 +18,14 @@ export default function Question({ index, questionData, handleChange, removeQues
         value={questionData.answer}
         onChange={(e) => handleChange(index, 'answer', e.target.value)}
       />
+      )}
       <div className="form-check form-switch my-2">
         <input
           className="form-check-input"
           type="checkbox"
           id={`gradedToggle${index}`}
           checked={questionData.graded}
-          onChange={(e) => handleChange(index, 'isGraded', e.target.checked)}
+          onChange={(e) => handleChange(index, 'graded', e.target.checked)}
         />
         <label className="form-check-label" htmlFor={`gradedToggle${index}`}>
           Graded
