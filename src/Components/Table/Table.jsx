@@ -23,7 +23,10 @@ export default function Table() {
     <div className="container tablee">
       <div className="d-flex justify-content-between align-items-center py-3">
         <h3>Exam History</h3>
-        <button className="btn btn-primary">Create</button>
+        <button className="btn btn-primary" onClick={() => {
+          window.location.href = "/create";
+          
+        }}>Create</button>
       </div>
       <table className="table-bordered">
         <thead>

@@ -1,9 +1,9 @@
 .exam-title-container {
     text-align: center; /* Center the title */
     margin-bottom: 20px; /* Add some space below the title */
-  }
-  
-  .exam-title {
+}
+
+.exam-title {
     /* remove the borders and background of the text box */
     background: none;
     /* Add some styling to the text */
@@ -14,15 +14,47 @@
     border: none !important;
     justify-content: center;
     text-align: center;
-    
-  }
-  
-  .title-divider {
+}
+
+.title-divider {
     width: 80%; /* Adjust the width as needed */
     margin: -12px auto; /* Center the line and add some spacing */
-  }
-  
-  .no-questions {
+}
+
+/* Container for time inputs */
+.time-inputs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 20px; /* Adds space between each input for better separation */
+}
+
+/* Labels for each input */
+.time-inputs label {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600; /* Makes the label text bolder for better readability */
+    align-items: center; /* Centers the label and input horizontally */
+}
+
+/* Inputs styling */
+.time-inputs input {
+    padding: 8px; /* Adds padding inside the input for better click area */
+    font-size: 14px;
+    border: 1px solid #ccc; /* Adds a subtle border for inputs */
+    border-radius: 4px; /* Rounds the corners of the inputs */
+    margin-top: 5px; /* Adds space between the label and the input */
+}
+
+/* Container styling for better overall appearance */
+.time-inputs {
+    padding: 20px; /* Adds padding around the entire container */
+    border-radius: 8px; /* Rounds the corners of the container */
+}
+
+.no-questions {
     text-align: center;
     color: #666;
     font-size: 24px;
@@ -47,12 +79,6 @@
     align-items: center;
 }
 
-
-
-
-
-
-
 /* Media query for responsive design */
 @media (max-width: 576px) {
     .buttons-container {
@@ -61,6 +87,16 @@
 
     .btn {
         width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .time-inputs {
+        flex-direction: column;
+        align-items: center;
+        
+    }
+
+    .time-inputs label {
         margin-bottom: 10px;
     }
 }

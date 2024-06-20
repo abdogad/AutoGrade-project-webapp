@@ -31,7 +31,7 @@ const NavBar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
-        <Navbar.Brand href="home">ExamApp</Navbar.Brand>
+        <Navbar.Brand href="/home">ExamApp</Navbar.Brand>
         {isLoggedIn &&
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
         }
@@ -39,7 +39,7 @@ const NavBar = () => {
             <Navbar.Collapse id="basic-navbar-nav">
             
                 <Nav className="me-auto">
-                <Nav.Link href="create">Create</Nav.Link>
+                <Nav.Link href="/create">Create</Nav.Link>
                 </Nav>
             
                 <Nav className="ml-auto">

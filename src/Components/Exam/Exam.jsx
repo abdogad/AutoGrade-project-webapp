@@ -18,6 +18,12 @@ export default function Exam() {
     apis
       .getExamById(id)
       .then((res) => {
+        if (res.data.message){
+          
+          setStatus(res.data.message);
+          setLoading(false);
+          return;
+        }
         setFormData({
           ...formData,
           title: res.data.title,
@@ -28,13 +34,12 @@ export default function Exam() {
           })),
         });
         setEndTime(new Date(res.data.end_time));
-        if (res.data.message){
-            setStatus(res.data.message);
-            
-        }
+        
+        
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        
         setStatus("Not found");
         setLoading(false);
       });
@@ -69,7 +74,9 @@ export default function Exam() {
         questions: formData.questions,
       })
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          window.location.href = "/home";
+        }
       })
       .catch((err) => {
         console.log(err);

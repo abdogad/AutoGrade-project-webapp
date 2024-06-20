@@ -4,14 +4,13 @@ import Question from './Question';
 import apis from '../../apis/apis';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 
-
-// Question component
-
-
 // CreateForm component
 export default function CreateForm() {
   // State to manage the list of questions
   const [questions, setQuestions] = useState([]);
+  const [examTitle, setExamTitle] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   // Function to add a new question to the list
   const addQuestion = () => {
@@ -34,27 +33,62 @@ export default function CreateForm() {
 
   // Function to submit the form
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const title = "Title of exam";
-    apis.createExam({title:title, questions:questions, start_time: new Date(), end_time: new Date()}).then((res) => {
-      console.log(res);
+    if (questions.length === 0) {
+      alert('Please add at least one question');
+      return;
     }
-    ).catch((err) => {
-      console.log(err);
-    }
-    );
     
-    // Here you can send the questions array to your backend or wherever you need
+    event.preventDefault();
+    apis.createExam({ title: examTitle, questions: questions, start_time: startTime, end_time: endTime })
+      .then((res) => {
+        if (res.status === 200) {
+          
+          window.location.href = '/home';
+        } else {
+          alert('Failed to create exam');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="container">
       <div className="exam-title-container">
-        <input type="text" className='exam-title' placeholder="Enter exam title" />
+        <input 
+          type="text" 
+          className='exam-title' 
+          placeholder="Enter exam title" 
+          value={examTitle} 
+          onChange={(e) => setExamTitle(e.target.value)}
+          required
+        />
         <hr className="title-divider" />
       </div>
       
       <form onSubmit={handleSubmit}>
+        <div className="time-inputs">
+          <label>
+            Start Time:
+            <input 
+              type="datetime-local" 
+              value={startTime} 
+              onChange={(e) => setStartTime(e.target.value)} 
+              required
+            />
+          </label>
+          <label>
+            End Time:
+            <input 
+              type="datetime-local" 
+              value={endTime} 
+              onChange={(e) => setEndTime(e.target.value)}
+              min={startTime}
+              required
+            />
+          </label>
+        </div>
         <div className="createForm py-3">
           <div className="container d-flex justify-content-center">
             <div className="boxInput w-50">
