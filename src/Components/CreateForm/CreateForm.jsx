@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "./form.css";
 import Question from './Question';
 import apis from '../../apis/apis';
-import { FaRegQuestionCircle } from 'react-icons/fa';
+import { FaRegQuestionCircle, FaFileUpload, FaTimesCircle } from 'react-icons/fa';
 
 // CreateForm component
 export default function CreateForm() {
@@ -11,6 +11,7 @@ export default function CreateForm() {
   const [examTitle, setExamTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [file, setFile] = useState(null);
 
   // Function to add a new question to the list
   const addQuestion = () => {
@@ -31,19 +32,49 @@ export default function CreateForm() {
     setQuestions(updatedQuestions);
   };
 
+  // Function to handle file upload
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  // Function to remove the uploaded file
+  const removeFile = () => {
+    setFile(null);
+  };
+
   // Function to submit the form
   const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
     if (questions.length === 0) {
       alert('Please add at least one question');
       return;
     }
+
+    console.log(questions); // Debug: log questions array
+
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('title', examTitle);
+    formData.append('start_time', startTime);
+    formData.append('end_time', endTime);
     
-    event.preventDefault();
-    apis.createExam({ title: examTitle, questions: questions, start_time: startTime, end_time: endTime })
+    // Append questions
+    questions.forEach((question, index) => {
+        formData.append(`questions[${index}]`, JSON.stringify(question));
+    });
+
+    // Append file if exists
+    if (file) {
+        formData.append('file', file);
+    }
+
+    // Call the API to create the exam
+    apis.createExam(formData)
       .then((res) => {
         if (res.status === 200) {
-          
-          window.location.href = '/home';
+          console.log(res.data);
+          window.location.href = '/home'; // Uncomment to redirect after success
         } else {
           alert('Failed to create exam');
         }
@@ -51,7 +82,8 @@ export default function CreateForm() {
       .catch((err) => {
         console.log(err);
       });
-  };
+};
+
 
   return (
     <div className="container">
@@ -70,7 +102,7 @@ export default function CreateForm() {
       <form onSubmit={handleSubmit}>
         <div className="time-inputs">
           <label>
-            Start Time:
+            <div className="interval-time">Start Time:</div>
             <input 
               type="datetime-local" 
               value={startTime} 
@@ -79,7 +111,7 @@ export default function CreateForm() {
             />
           </label>
           <label>
-            End Time:
+            <div className="interval-time">End Time:</div>
             <input 
               type="datetime-local" 
               value={endTime} 
@@ -89,6 +121,20 @@ export default function CreateForm() {
             />
           </label>
         </div>
+        
+        <div className="file-upload-container">
+          <label className="file-upload-label">
+            <FaFileUpload className="file-upload-icon" />
+            <input type="file" accept=".pdf" onChange={handleFileChange} className="file-upload-input" />
+            {file ? file.name : 'Upload PDF'}
+          </label>
+          {file && (
+            <button type="button" onClick={removeFile} className="remove-file-button">
+              <FaTimesCircle className="remove-file-icon" />
+            </button>
+          )}
+        </div>
+
         <div className="createForm py-3">
           <div className="container d-flex justify-content-center">
             <div className="boxInput w-50">
@@ -100,6 +146,7 @@ export default function CreateForm() {
                     questionData={question}
                     handleChange={handleChange}
                     removeQuestion={removeQuestion}
+                    file = {file}
                   />
                 ))
               ) : (

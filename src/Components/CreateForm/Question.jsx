@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Question({ index, questionData, handleChange, removeQuestion }) {
+export default function Question({ index, questionData, handleChange, removeQuestion,file }) {
   return (
     <div className="question my-3">
       <input
@@ -10,7 +10,7 @@ export default function Question({ index, questionData, handleChange, removeQues
         value={questionData.question}
         onChange={(e) => handleChange(index, 'question', e.target.value)}
       />
-      {questionData.graded && (
+      {questionData.graded && file == null && (
       <input
         className='form-control my-2'
         type="text"

@@ -8,7 +8,7 @@ export default {
         return await instance.post(`/users/login/`, data);
     },
     register: async (data) => {
-        return await instance.post(`/users/signup/`, data);
+        return await instance.post(`/users/register/`, data);
     },
     logout: async () => {
         return await instance.post(`/users/logout/`);
@@ -17,7 +17,14 @@ export default {
         return await instance.get("exams/list/");
     },
     createExam: async (data) => {
-        return await instance.post(`exams/create/`, data);
+        return await instance.post(`exams/create/`, data,{
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: localStorage.getItem("access_token")
+                ? "Token " + localStorage.getItem("access_token")
+                : null,
+            },
+          });
     },
     getExamById: async (id) => {
         return await instance.get(`exams/exam/${id}/questions/`);

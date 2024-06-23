@@ -3,6 +3,9 @@ import { Outlet } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import apis from "../../apis/apis";
 import SpinnerLoader from "./SpinnerLoader";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+
 function PrivateRoutes() {
   const [isLogged, setIsLogged] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,7 +29,11 @@ function PrivateRoutes() {
   return loading ? (
     <SpinnerLoader />
   ) : isLogged ? (
-    <Outlet />
+    <>
+      <Navbar />
+        <Outlet />
+      <Footer />
+    </>
   ) : (
     <Navigate to="/" />
   );

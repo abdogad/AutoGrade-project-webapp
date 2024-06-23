@@ -74,9 +74,9 @@ export default function Exam() {
         questions: formData.questions,
       })
       .then((res) => {
-        if (res.status === 200) {
-          window.location.href = "/home";
-        }
+        
+        window.location.href = "/home";
+        
       })
       .catch((err) => {
         console.log(err);
@@ -116,7 +116,7 @@ export default function Exam() {
         alignItems:"center",
         fontSize:"2rem"
         
-    }}>Loading...</div>;
+    }}></div>;
   }
   if (status !== "Active") {
     return <div style={{
@@ -131,6 +131,12 @@ export default function Exam() {
   }
 
   return (
+    <div style={{
+        display:"flex",
+        justifyContent:"center",
+        
+    
+    }}>
     <div className="exam-container">
       <form onSubmit={handleSubmit}>
         <div className="header">
@@ -159,6 +165,7 @@ export default function Exam() {
         ))}
         <button type="submit">Submit</button>
       </form>
+    </div>
     </div>
   );
 }

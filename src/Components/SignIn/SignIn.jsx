@@ -10,51 +10,16 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import image from "../../Assets/student-using-tablet-computer-flat-illustration-generative_676904-7232.jpg"
-import apis from "../../apis/apis";
-import { useEffect ,useState} from "react";
 export default function SignInSide() {
-  const [loading, setLoading] = useState(true);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get("email");
-    const password = data.get("password");
-    apis
-      .login({ email: email, password: password })
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.setItem("access_token", res.data.token);
-          window.location.href = "/home";
-        } else {
-          alert("Invalid Credentials");
-        }
-      })
-      .catch((err) => {
-        alert("Invalid Credentials");
-      });
+    console.log({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
   };
-  useEffect(() => {
-    apis
-      .isLogged()
-      .then((res) => {
-        if (res.status === 200) {
-          window.location.href = "/home";
-        }
-        setLoading(false);
-      })
-      .catch(() => {setLoading(false);});
-  }, []);
-  if (loading) {
-    return <div style={{
-      width:"100vh",
-      height:"100vh",
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center",
-      fontSize:"2rem"
-      
-  }}>Loading...</div>;
-  }
+
   return (
     <Container component="main" maxWidth="lg">
       <Box
@@ -146,7 +111,7 @@ export default function SignInSide() {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="/signup" variant="body2">
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>

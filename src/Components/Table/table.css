@@ -27,7 +27,8 @@ table tr:nth-child(even) {
 table th,
 table td {
   padding: .625em;
-  text-align: left;
+  text-align: center; /* Center horizontally */
+  vertical-align: middle; /* Center vertically */
 }
 
 table th {
@@ -38,12 +39,6 @@ table th {
   text-transform: uppercase;
 }
 
-table td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .tablee h3::first-letter {
   font-size: larger;
   font-weight: bold;
@@ -51,14 +46,17 @@ table td {
 }
 
 .status-not-started {
+  font-weight: bold;
   color: blue;
 }
 
 .status-active {
+  font-weight: bold;
   color: green;
 }
 
 .status-ended {
+  font-weight: bold;
   color: red;
 }
 
@@ -78,4 +76,62 @@ button.btn.btn-primary {
 
 button.btn.btn-primary:hover {
   background-color: #0056b3;
+}
+
+.copy-container {
+  position: relative;
+  display: inline-block;
+}
+
+.copy-icon {
+  cursor: pointer;
+  color: #007bff;
+  margin-left: 10px;
+}
+
+.copy-icon:hover {
+  color: #0056b3;
+}
+
+.tooltip-text {
+  visibility: visible;
+  width: 60px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  margin-left: -30px; /* Center the tooltip */
+  opacity: 0.9;
+  font-size: 0.75rem;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Arrow at the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+
+.no-exams-message {
+  text-align: center;
+  padding: 20px;
+  border-radius: 4px;
+  margin-top: 20px;
+  font-size: large;
+  font-weight: bold;  
+}
+
+.no-exams-message p {
+  font-size: 1.2em;
+  color: #555;
 }
